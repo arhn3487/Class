@@ -1,0 +1,31 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+O DB "THIS IS ODD$"
+E DB "THIS IS EVEN$"
+.CODE
+
+MAIN PROC  
+    MOV AX,@DATA
+    MOV DS,AX
+    
+    MOV AH,01H  
+    INT 21H
+    SUB AL,'0'
+    AND AL,1
+   
+    CMP AL,1
+    JE ODD     
+    JNE EVEN
+    
+    EVEN:
+    MOV DX,OFFSET E 
+    JMP FIN
+    ODD:
+    MOV DX,OFFSET O  
+    
+    FIN:
+    MOV AH,09H
+    INT 21H
+    MAIN ENDP
+END MAIN
