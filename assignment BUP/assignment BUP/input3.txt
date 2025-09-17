@@ -1,0 +1,8 @@
+myVariable
+123abc
+float
+_underscore_var
+helloWorld123
+for
+good_name
+3name
