@@ -1,70 +1,59 @@
-.model small
-.stack 100h
-.data
-msg1 db "Enter first digit: $"
-msg2 db "Enter second digit: $"
-msg3 db "Enter third digit: $"
-res1 db "First$"
-res2 db "Second$"
-res3 db "Third$"
-.code
-main proc
-    mov ax,@data
-    mov ds,ax
+.MODEL SMALL
+.STACK 100H
 
-    lea dx,msg1
-    mov ah,9
-    int 21h
-    mov ah,1
-    int 21h
-    sub al,30h
-    mov bl,al   
+.DATA
+    PROMPT_MSG DB 'Enter two digits: $'
+    MSG_LARGER DB ' is larger in $'
+    NUM1       DB ?
+    NUM2       DB ?
 
-    lea dx,msg2
-    mov ah,9
-    int 21h
-    mov ah,1
-    int 21h
-    sub al,30h
-    mov bh,al  
+.CODE
+MAIN PROC
+    MOV AX, @DATA
+    MOV DS, AX
 
-    lea dx,msg3
-    mov ah,9
-    int 21h
-    mov ah,1    
-    int 21h     
-    sub al,30h
-    mov cl,al  
+    MOV AH, 9
+    LEA DX, PROMPT_MSG
+    INT 21H
 
-    mov al,bl
-    cmp bh,al
-    ja set_b
-    cmp cl,al
-    ja set_c
-    jmp set_a
+    MOV AH, 1
+    INT 21H
+    MOV NUM1, AL
 
-set_b:
-    mov al,bh
-    cmp cl,al
-    ja set_c
-    jmp set_b_label
+    MOV AH, 1
+    INT 21H
 
-set_c:
-    lea dx,res3
-    jmp print
+    MOV AH, 1
+    INT 21H
+    MOV NUM2, AL
 
-set_b_label:
-    lea dx,res2
-    jmp print
+    MOV AH, 2
+    MOV DL, 0AH
+    INT 21H
+    MOV DL, 0DH
+    INT 21H
 
-set_a:
-    lea dx,res1
+    MOV AL, NUM1
+    MOV BL, NUM2
+    CMP AL, BL
+    JGE FIRST_IS_LARGER
 
-print:
-    mov ah,9
-    int 21h
+    MOV AL, BL
+    JMP DISPLAY_LARGER
 
-    mov ah,4Ch
-    int 21h
-main endp
-end main
+FIRST_IS_LARGER:
+
+DISPLAY_LARGER:
+    MOV AH, 2
+    MOV DL, AL
+    INT 21H
+
+    MOV AH, 9
+    LEA DX, MSG_LARGER
+    INT 21H
+
+    MOV AH, 4CH
+    INT 21H
+
+MAIN ENDP
+END MAIN
